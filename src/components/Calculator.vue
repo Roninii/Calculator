@@ -1,6 +1,6 @@
 <template>
   <div class="calculator">
-    <div class="display" id="display">{{ current || 0 }}</div>
+    <div class="display" id="display">{{ current || total || 0 }}</div>
     <div class="button" @click="clear" id="clear">AC</div>
     <div class="button" @click="changeSign">+/-</div>
     <div class="button" @click="percent">%</div>
@@ -30,6 +30,7 @@ export default {
     return {
       previous: "",
       current: "",
+      total: "",
       operator: ""
     };
   },
@@ -54,6 +55,7 @@ export default {
       this.current = "";
       this.previous = "";
       this.operator = "";
+      this.total = "";
     },
     changeSign() {
       if (!this.current.length) {
@@ -69,28 +71,37 @@ export default {
       this.current = (parseFloat(this.current) / 100).toString();
     },
     updateOperator(operator) {
+      if (!this.current && !this.total) {
+        return;
+      }
+      if ((this.operator && this.previous) || (this.operator && this.total)) {
+        this.calculate();
+      }
       this.previous = this.current;
       this.current = "";
       this.operator = operator;
     },
     calculate() {
-      let total;
+      if (this.total) {
+        this.previous = this.total;
+      }
       switch (this.operator) {
         case "+":
-          total = parseFloat(this.previous) + parseFloat(this.current);
+          this.total = parseFloat(this.previous) + parseFloat(this.current);
           break;
         case "-":
-          total = parseFloat(this.previous) - parseFloat(this.current);
+          this.total = parseFloat(this.previous) - parseFloat(this.current);
           break;
         case "x":
-          total = parseFloat(this.previous) * parseFloat(this.current);
+          this.total = parseFloat(this.previous) * parseFloat(this.current);
           break;
         default:
-          total = parseFloat(this.previous) / parseFloat(this.current);
+          this.total = parseFloat(this.previous) / parseFloat(this.current);
           break;
       }
       this.previous = "";
-      this.current = total;
+      this.current = "";
+      this.operator = "";
     }
   }
 };
