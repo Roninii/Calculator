@@ -108,7 +108,13 @@ export default {
 </script>
 
 <style scoped>
+@media screen and (min-width: 700px) {
+  .calculator {
+    box-shadow: 5px 0px 10px #aaaaaa, -5px 0px 10px #aaaaaa;
+  }
+}
 .calculator {
+  max-width: 700px;
   display: grid;
   margin: 0 auto;
   height: 100%;
